@@ -16,7 +16,7 @@ RUN add-apt-repository --yes --update ppa:ansible/ansible
 RUN apt-get install -y ansible
 
 #Download and run konstruktoid.hardening Playbook
-RUN git clone https://github.com/simeononsecurity/docker-ubuntu-hardened.git
+RUN git clone https://github.com/Mrityunjay0010/docker-ubuntu-hardened.git
 RUN cd /docker-ubuntu-hardened/ && chmod +x ./dockersetup.sh
 RUN cd /docker-ubuntu-hardened && bash ./dockersetup.sh
 
