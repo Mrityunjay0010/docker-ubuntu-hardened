@@ -12,16 +12,18 @@ ENV CONF_DIR "$APP_DIR/conf"
 
 USER root
 
-# Update Packages
-RUN apt-get update && apt-get -y install apt-utils && apt-get -fuy full-upgrade -y 
+Update system
+RUN apt-get update \
+  && apt-get install -y --no-install-recommends ca-certificates \
+  && apt-get clean \
+  && find / -xdev -name 'apt' -print0 | xargs rm -rf
+  
+  WORKDIR /home/$APP_USER
+COPY hardening.sh .
+# RUN chmod +x hardening.sh && ./hardening.sh && groupadd -r $APP_USER && useradd -r -g $APP_USER $APP_USER
+RUN chmod +x hardening.sh && ./hardening.sh 
+RUN useradd -m $APP_USER && adduser $APP_USER sudo && echo '%sudo ALL=(ALL) NOPASSWD:ALL' >> /etc/sudoers
+RUN chsh -s /usr/sbin/nologin root
 
-# Install Ansible
-RUN add-apt-repository --yes --update ppa:ansible/ansible
-RUN apt-get install -y ansible
-
-#Download and run konstruktoid.hardening Playbook
-RUN git clone https://github.com/Mrityunjay0010/docker-ubuntu-hardened.git
-RUN cd /docker-ubuntu-hardened/ && chmod +x ./dockersetup.sh
-RUN cd /docker-ubuntu-hardened && bash ./dockersetup.sh
 
 ENTRYPOINT [ "/bin/bash" ]
