@@ -1,15 +1,19 @@
 FROM ubuntu:latest
 
-LABEL org.opencontainers.image.source="https://github.com/simeononsecurity/docker-ubuntu-hardened"
-LABEL org.opencontainers.image.description="Hardened Docker Container with arm, arm64, and amd64 support"
-LABEL org.opencontainers.image.authors="simeononsecurity"
+LABEL org.opencontainers.image.authors="Mrityunjay0010@gmail.COM"
 
-ENV DEBIAN_FRONTEND noninteractive
-ENV container docker
-ENV TERM=xterm
+# Environment Variables
+ENV DEBIAN_FRONTEND=noninteractive
+ENV APP_USER=app
+ENV APP_USER=$APP_USER
+ENV APP_DIR="/$APP_USER"
+ENV DATA_DIR "$APP_DIR/data"
+ENV CONF_DIR "$APP_DIR/conf"
+
+USER root
 
 # Update Packages
-RUN apt-get update && apt-get -y install apt-utils && apt-get -fuy full-upgrade -y && apt-get -fuy install git aide iptables ufw software-properties-common dnsutils apparmor kmod systemd automake net-tools procps cmake make python3 python3-pip python3-dev
+RUN apt-get update && apt-get -y install apt-utils && apt-get -fuy full-upgrade -y 
 
 # Install Ansible
 RUN add-apt-repository --yes --update ppa:ansible/ansible
